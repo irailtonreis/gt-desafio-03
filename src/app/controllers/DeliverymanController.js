@@ -31,6 +31,12 @@ class DeliverymanController {
       where: { email },
     });
 
+    const file = await File.findByPk(req.body.avatar_id);
+
+    if (!file) {
+      return res.status(401).json({ error: 'Avatar does not exists.' });
+    }
+
     if (deliverymanExists) {
       return res.status(400).json({ error: 'E-mail already exists.' });
     }
@@ -77,11 +83,13 @@ class DeliverymanController {
   }
 
   async delete(req, res) {
-    const deliverymen = await Deliverman.findByPk(req.params.id, {
-      include: [{ model: File, as: 'avatar' }],
-    });
+    const deliverymen = await Deliverman.findByPk(req.params.id);
 
+    if (!deliverymen) {
+      return res.status(401).json({ error: 'Deliveryman does not exists.' });
+    }
     await deliverymen.destroy();
+
     return res.send();
   }
 }
