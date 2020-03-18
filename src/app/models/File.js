@@ -19,6 +19,13 @@ class File extends Model {
     );
     return this;
   }
+
+  static associate(models) {
+    this.hasOne(models.Order, {
+      foreignKey: 'signature_id',
+      as: 'avatar',
+    });
+  }
 }
 
 export default File;

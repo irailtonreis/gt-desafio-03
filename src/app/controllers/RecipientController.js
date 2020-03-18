@@ -25,13 +25,13 @@ class RecipientController {
       return res.status(401).json({ error: 'Validation Fails' });
     }
 
-    const recipientExists = await Recipient.findOne({
-      where: { cep: req.body.cep, nome: req.body.nome },
-    });
+    // const recipientExists = await Recipient.findOne({
+    //   where: { cep: req.body.cep, nome: req.body.nome },
+    // });
 
-    if (recipientExists) {
-      return res.status(400).json({ error: 'User already exists.' });
-    }
+    // if (recipientExists) {
+    //   return res.status(400).json({ error: 'User already exists.' });
+    // }
 
     const {
       id,

@@ -6,10 +6,6 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       product: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -33,6 +29,13 @@ module.exports = {
       signature_id: {
         type: Sequelize.INTEGER,
         references: { model: 'files', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
+        allowNul: true,
+      },
+      deliveryman_id: {
+        type: Sequelize.INTEGER,
+        references: { model: 'deliverymans', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNul: true,
