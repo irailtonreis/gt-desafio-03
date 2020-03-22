@@ -9,6 +9,8 @@ import {
   format,
   isAfter,
   isBefore,
+  startOfDay,
+  endOfDay,
 } from 'date-fns';
 import Order from '../models/Order';
 
@@ -30,34 +32,38 @@ class OrderController {
 
     const startDate = [
       '08:00',
-      '09:00',
-      '10:00',
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
       '18:00',
     ];
+    const [date, minute] = start_date.split('T');
+    console.log(date);
 
-    const avaliable = startDate.map(time => {
-      const [hour, minute] = time.split(':');
-      const value = setSeconds(
-        setMinutes(setHours(parseISO(start_date), hour), minute),
-        0
-      );
+    var startday = startOfDay(new Date(date, 8, 00, 0))
+    var endDay = startOfDay(new Date(date, 18, 00, 0))
 
-      return {
-        time,
-        value: format(value, "yyy-MM-dd'T'HH:mm:ssxxx"),
-        avaliable: isAfter(value, new Date().getTime()),
-      };
-    });
+    console.log(startday);
+    // console.log(result);
+    // const avaliable = startDate.map((time, index) => {
+      
+
+      const [hour] = time.split(':');
+
+    //   console.log(hour);
+    //   const hourEnd = setSeconds(
+    //     setMinutes(setHours(parseISO(start_date), hour), minute),
+    //     0
+    //   );
 
 
-    return res.json(avaliable);
+    //   const date = parseISO(start_date);
+
+    //   return {
+    //     value: format(value, "yyy-MM-dd'T'HH:mm:ssxxx"),
+    //     date: format(date, "yyy-MM-dd'T'HH:mm:ssxxx"),
+    //     avaliable: isBefore(date, hourEnd),
+    //   };
+    // });
+
+
     // if (!(await schema.isValid(req.body))) {
     //   return res.status(400).json({ error: 'Validation fails' });
     // }
@@ -84,7 +90,7 @@ class OrderController {
 
     // const order = await Order.create(req.body);
 
-    // return res.json(order);
+    return res.json(startday);
   }
 }
 
