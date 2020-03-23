@@ -15,6 +15,13 @@ class Order extends Model {
     );
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Deliveryman, {
+      foreignKey: 'deliveryman_id',
+      as: 'deliveryman',
+    });
+  }
 }
 
 export default Order;

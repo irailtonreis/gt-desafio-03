@@ -1,10 +1,24 @@
 import * as Yup from 'yup';
 import { parseISO, startOfHour, isBefore, format, isAfter } from 'date-fns';
 import Order from '../models/Order';
+import Deliveryman from '../models/Deliveryman';
 
 class OrderController {
   async index(req, res) {
-    return res.send();
+    const orders = await Order.findAll({
+      where: {
+        canceled_at: null,
+      },
+      order: ['start_date'],
+      attributes: ['id', 'product', 'start_date'],
+      include: [
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+        },
+      ],
+    });
+    return res.json(orders);
   }
 
   async store(req, res) {
