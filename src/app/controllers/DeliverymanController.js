@@ -7,7 +7,7 @@ class DeliverymanController {
     const deliverymen = await Deliverman.findAll({
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
-        { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+        { model: File, as: 'sgnature', attributes: ['name', 'path', 'url'] },
       ],
     });
     return res.json(deliverymen);
@@ -26,20 +26,20 @@ class DeliverymanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    // const { email } = req.body;
-    // const deliverymanExists = await Deliverman.findOne({
-    //   where: { email },
-    // });
+    const { email } = req.body;
+    const deliverymanExists = await Deliverman.findOne({
+      where: { email },
+    });
 
-    // const file = await File.findByPk(req.body.avatar_id);
+    const file = await File.findByPk(req.body.avatar_id);
 
-    // if (!file) {
-    //   return res.status(401).json({ error: 'Avatar does not exists.' });
-    // }
+    if (!file) {
+      return res.status(401).json({ error: 'Avatar does not exists.' });
+    }
 
-    // if (deliverymanExists) {
-    //   return res.status(400).json({ error: 'E-mail already exists.' });
-    // }
+    if (deliverymanExists) {
+      return res.status(400).json({ error: 'E-mail already exists.' });
+    }
 
     const deliveryman = await Deliverman.create(req.body);
 
