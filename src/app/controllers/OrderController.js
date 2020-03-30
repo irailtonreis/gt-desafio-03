@@ -2,6 +2,8 @@ import * as Yup from 'yup';
 import { parseISO, startOfHour, isBefore, format, isAfter } from 'date-fns';
 import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
+import Recipient from '../models/Recipient';
+import File from '../models/File';
 
 class OrderController {
   async index(req, res) {
@@ -15,6 +17,16 @@ class OrderController {
         {
           model: Deliveryman,
           as: 'deliveryman',
+          // include: [
+          //   {
+          //     model: File,
+          //     as: 'sgnature',
+          //   },
+          // ],
+        },
+        {
+          model: Recipient,
+          as: 'recipient',
         },
       ],
     });
