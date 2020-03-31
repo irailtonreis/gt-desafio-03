@@ -12,7 +12,7 @@ class OrderController {
       where: {
         canceled_at: null,
       },
-      order: ['start_date'],
+      order: ['id'],
       attributes: ['id', 'product', 'start_date'],
       include: [
         {
@@ -64,19 +64,21 @@ class OrderController {
     if (start_date) {
       const date = parseISO(start_date);
 
-      const date1 = parseISO(start_date).setHours(5, 0, 0);
+      const setDate = parseISO(start_date);
 
-      const date2 = parseISO(start_date).setHours(15, 0, 0);
+      const date1 = setDate.setHours(5, 0, 0);
+
+      const date2 = setDate.setHours(15, 0, 0);
 
       const startDay = parseISO(format(date1, "yyy-MM-dd'T'HH:mm:ssxxx"));
       const endDay = parseISO(format(date2, "yyy-MM-dd'T'HH:mm:ssxxx"));
 
       if (isBefore(date, startDay)) {
-        return res.status(400).json({ error: 'Time not allowed' });
+        return res.status(400).json({ error: 'Hour is not allowed' });
       }
 
       if (isAfter(date, endDay)) {
-        return res.status(400).json({ error: 'Time not allowed' });
+        return res.status(400).json({ error: 'Hour is not allowed' });
       }
 
       const hourStart = startOfHour(parseISO(start_date));
@@ -110,7 +112,6 @@ class OrderController {
   async update(req, res) {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
-      start_date: Yup.date().required(),
       recipient_id: Yup.number().required(),
       signature_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
@@ -120,9 +121,11 @@ class OrderController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { id } = await Order.findByPk(req.params.id);
+    const order = await Order.findByPk(req.params.id);
 
-    return res.json(id);
+    await order.update(req.body);
+
+    return res.json(order);
   }
 
   async delete(req, res) {
