@@ -17,11 +17,8 @@ class Order extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.File, {
-      as: 'sgnature',
-    });
-
     this.belongsTo(models.Recipient, {
+      foreignKey: 'recipient_id',
       as: 'recipient',
     });
 
@@ -29,6 +26,11 @@ class Order extends Model {
       foreignKey: 'deliveryman_id',
       as: 'deliveryman',
     });
+
+    // this.belongsTo(models.File, {
+    //   foreignKey: 'avatar_id',
+    //   as: 'sgnature',
+    // });
   }
 }
 

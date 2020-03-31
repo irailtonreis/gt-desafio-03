@@ -22,7 +22,7 @@ class File extends Model {
 
   static associate(models) {
     this.hasOne(models.Deliveryman, {
-      foreignKey: 'deliveryman_id',
+      foreignKey: 'avatar_id',
       as: 'sgnature',
     });
   }

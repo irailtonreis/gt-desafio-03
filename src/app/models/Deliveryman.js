@@ -17,12 +17,12 @@ class Deliveryman extends Model {
 
   static associate(models) {
     this.belongsTo(models.File, {
-      foreignKey: 'deliveryman_id',
+      foreignKey: 'avatar_id',
       as: 'sgnature',
     });
 
     this.hasMany(models.Order, {
-      foreignKey: 'deliveryman_id',
+      foreignKey: 'avatar_id',
       as: 'deliveryman',
     });
   }

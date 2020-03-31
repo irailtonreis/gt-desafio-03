@@ -17,16 +17,27 @@ class OrderController {
         {
           model: Deliveryman,
           as: 'deliveryman',
-          // include: [
-          //   {
-          //     model: File,
-          //     as: 'sgnature',
-          //   },
-          // ],
+          attributes: ['name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'sgnature',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
         },
         {
           model: Recipient,
           as: 'recipient',
+          attributes: [
+            'id',
+            'nome',
+            'rua',
+            'numero',
+            'complemento',
+            'cep',
+            'cidade',
+          ],
         },
       ],
     });
@@ -84,6 +95,30 @@ class OrderController {
     const order = await Order.create(req.body);
 
     return res.send(order);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      product: Yup.string().required(),
+      start_date: Yup.date().required(),
+      recipient_id: Yup.number().required(),
+      signature_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Validation fails' });
+    }
+
+    const { id } = await Order.findByPk(req.params.id);
+
+    return res.json(id);
+  }
+
+  async delete(req, res) {
+    const order = await Order.findByPk(req.params.id);
+
+    return res.json(order);
   }
 }
 
