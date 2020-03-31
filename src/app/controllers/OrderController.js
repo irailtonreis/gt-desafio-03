@@ -4,6 +4,7 @@ import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
+import Mail from '../../lib/Mail';
 
 class OrderController {
   async index(req, res) {
@@ -21,7 +22,7 @@ class OrderController {
           include: [
             {
               model: File,
-              as: 'sgnature',
+              as: 'avatar',
               attributes: ['id', 'path', 'url'],
             },
           ],
@@ -47,7 +48,6 @@ class OrderController {
   async store(req, res) {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
-      start_date: Yup.date().required(),
       recipient_id: Yup.number().required(),
       signature_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
@@ -59,40 +59,50 @@ class OrderController {
 
     const { deliveryman_id, start_date } = req.body;
 
-    const date = parseISO(start_date);
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-    const date1 = parseISO(start_date).setHours(5, 0, 0);
+    if (start_date) {
+      const date = parseISO(start_date);
 
-    const date2 = parseISO(start_date).setHours(15, 0, 0);
+      const date1 = parseISO(start_date).setHours(5, 0, 0);
 
-    const startDay = parseISO(format(date1, "yyy-MM-dd'T'HH:mm:ssxxx"));
-    const endDay = parseISO(format(date2, "yyy-MM-dd'T'HH:mm:ssxxx"));
+      const date2 = parseISO(start_date).setHours(15, 0, 0);
 
-    if (isBefore(date, startDay)) {
-      return res.status(400).json({ error: 'Time not allowed' });
-    }
+      const startDay = parseISO(format(date1, "yyy-MM-dd'T'HH:mm:ssxxx"));
+      const endDay = parseISO(format(date2, "yyy-MM-dd'T'HH:mm:ssxxx"));
 
-    if (isAfter(date, endDay)) {
-      return res.status(400).json({ error: 'Time not allowed' });
-    }
+      if (isBefore(date, startDay)) {
+        return res.status(400).json({ error: 'Time not allowed' });
+      }
 
-    const hourStart = startOfHour(parseISO(start_date));
+      if (isAfter(date, endDay)) {
+        return res.status(400).json({ error: 'Time not allowed' });
+      }
 
-    const checkOrders = await Order.findOne({
-      where: {
-        deliveryman_id,
-        canceled_at: null,
-        start_date: hourStart,
-      },
-    });
+      const hourStart = startOfHour(parseISO(start_date));
 
-    if (checkOrders) {
-      return res
-        .status(400)
-        .json({ error: 'There is already a delivery in progress' });
+      const checkOrders = await Order.findOne({
+        where: {
+          deliveryman_id,
+          canceled_at: null,
+          start_date: hourStart,
+        },
+      });
+
+      if (checkOrders) {
+        return res
+          .status(400)
+          .json({ error: 'There is already a delivery in progress' });
+      }
     }
 
     const order = await Order.create(req.body);
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} ${deliveryman.email}`,
+      subject: 'Nova encomenda',
+      text: 'Você tem uma nova encomenda para entregar',
+    });
 
     return res.send(order);
   }
