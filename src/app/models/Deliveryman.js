@@ -21,10 +21,10 @@ class Deliveryman extends Model {
       as: 'avatar',
     });
 
-    // this.hasMany(models.Order, {
-    //   foreignKey: 'avatar_id',
-    //   as: 'avatar',
-    // });
+    this.hasMany(models.Order, {
+      foreignKey: 'signature_id',
+      as: 'signature',
+    });
   }
 }
 

@@ -132,7 +132,9 @@ class OrderController {
       recipient_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
     });
+    const { start_date, end_date } = req.body;
 
+    const hourEnd = startOfHour(parseISO(end_date));
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }

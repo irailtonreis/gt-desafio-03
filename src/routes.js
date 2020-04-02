@@ -5,12 +5,15 @@ import RecipientController from './app/controllers/RecipientController';
 import FileController from './app/controllers/FileController';
 import DeliverymanController from './app/controllers/DeliverymanController';
 import OrderController from './app/controllers/OrderController';
+import ViewController from './app/controllers/ViewController';
 import authMiddleware from './app/middlewares/auth';
 import multerConfig from './config/multer';
 
 const routes = new Router();
 
 const upload = multer(multerConfig);
+
+routes.get('/view/:id', ViewController.index);
 routes.post('/sessions', SessionController.store);
 
 routes.use(authMiddleware);
