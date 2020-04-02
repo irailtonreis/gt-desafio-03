@@ -1086,6 +1086,13 @@ get-stream@^3.0.0:
   resolved "https://registry.yarnpkg.com/get-stream/-/get-stream-3.0.0.tgz#8e943d1358dc37555054ecbe2edb05aa174ede14"
   integrity sha1-jpQ9E1jcN1VQVOy+LtsFqhdO3hQ=
 
+git-commit-msg-linter@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/git-commit-msg-linter/-/git-commit-msg-linter-2.4.2.tgz#d5cf7b4f5a4837e01cae9316a48f2f0e89cea2f0"
+  integrity sha512-118pe/+hnizS8XVTXAvyW+Mu/MU0YBfvMLtD67tD80e/vpw94RuIhqCHpmuHGJnA46qiOerFg6GUNLowN8vHRw==
+  dependencies:
+    chalk "^2.4.2"
+
 glob-parent@^5.0.0, glob-parent@~5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.0.tgz#5f4c1d1e748d30cd73ad2944b3577a81b081e8c2"

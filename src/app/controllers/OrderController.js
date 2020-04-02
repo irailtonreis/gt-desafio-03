@@ -23,7 +23,7 @@ class OrderController {
             {
               model: File,
               as: 'avatar',
-              attributes: ['id', 'path', 'url'],
+              attributes: ['name', 'path', 'url'],
             },
           ],
         },
@@ -39,6 +39,11 @@ class OrderController {
             'cep',
             'cidade',
           ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['name', 'path', 'url'],
         },
       ],
     });
