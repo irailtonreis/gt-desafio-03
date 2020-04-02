@@ -13,8 +13,10 @@ const routes = new Router();
 
 const upload = multer(multerConfig);
 
-routes.get('/view/:id', ViewController.index);
 routes.post('/sessions', SessionController.store);
+
+routes.get('/view/:id', ViewController.index);
+routes.get('/view/:id/deliveryman', ViewController.show);
 
 routes.use(authMiddleware);
 routes.get('/recipients', RecipientController.index);
