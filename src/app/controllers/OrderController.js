@@ -62,7 +62,7 @@ class OrderController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { deliveryman_id, start_date } = req.body;
+    const { deliveryman_id, start_date, recipient_id, product } = req.body;
 
     const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
@@ -103,12 +103,23 @@ class OrderController {
       }
     }
 
+    const recipient = await Recipient.findByPk(recipient_id);
     const order = await Order.create(req.body);
-
     await Mail.sendMail({
       to: `${deliveryman.name} ${deliveryman.email}`,
       subject: 'Nova encomenda',
-      text: 'Você tem uma nova encomenda para entregar',
+      template: 'cancellation',
+      context: {
+        deliveryman: deliveryman.name,
+        recipient: recipient.nome,
+        rua: recipient.rua,
+        numero: recipient.numero,
+        cep: recipient.cep,
+        complemento: recipient.complemento,
+        cidade: recipient.cidade,
+        estado: recipient.estado,
+        product,
+      },
     });
 
     return res.send(order);
