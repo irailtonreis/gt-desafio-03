@@ -54,7 +54,6 @@ class OrderController {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
       recipient_id: Yup.number().required(),
-      signature_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
     });
 
@@ -104,7 +103,9 @@ class OrderController {
     }
 
     const recipient = await Recipient.findByPk(recipient_id);
+
     const order = await Order.create(req.body);
+
     await Mail.sendMail({
       to: `${deliveryman.name} ${deliveryman.email}`,
       subject: 'Nova encomenda',
@@ -129,7 +130,6 @@ class OrderController {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
       recipient_id: Yup.number().required(),
-      signature_id: Yup.number().required(),
       deliveryman_id: Yup.number().required(),
     });
 
@@ -145,9 +145,18 @@ class OrderController {
   }
 
   async delete(req, res) {
+    const schema = Yup.object().shape({
+      id: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.params))) {
+      return res.status(400).json({ error: 'Invalid ID' });
+    }
     const order = await Order.findByPk(req.params.id);
 
-    return res.json(order);
+    await order.destroy();
+
+    return res.send();
   }
 }
 
