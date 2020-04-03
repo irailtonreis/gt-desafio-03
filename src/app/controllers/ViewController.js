@@ -4,6 +4,8 @@ import Order from '../models/Order';
 import Deliveryman from '../models/Deliveryman';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
+import VerifyStart from '../utils/VerifyStart';
+import VerifyEnd from '../utils/VerifyEnd';
 
 class ViewController {
   async show(req, res) {
@@ -105,6 +107,36 @@ class ViewController {
       ],
     });
     return res.json(orders);
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      id: Yup.number().required(),
+    });
+
+    if (!(await schema.isValid(req.params))) {
+      return res.status(400).json({ error: 'Invalid Id' });
+    }
+
+    const { start_date, end_date } = req.body;
+
+    const order = await Order.findByPk(req.params.id);
+
+    if (start_date) {
+      if (VerifyStart(start_date)) {
+        return res.status(400).json({ error: 'Hour start is not allowed' });
+      }
+    }
+
+    if (end_date) {
+      if (VerifyEnd(end_date)) {
+        return res.status(400).json({ error: 'Hour end is not allowed' });
+      }
+    }
+
+    await order.update(req.body);
+
+    return res.json(order);
   }
 }
 

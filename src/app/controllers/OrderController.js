@@ -96,7 +96,7 @@ class OrderController {
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
+      return res.status(400).json({ error: 'Validation fails' })
     }
 
     const order = await Order.findByPk(req.params.id);
