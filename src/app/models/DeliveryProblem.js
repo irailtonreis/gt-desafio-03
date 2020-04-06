@@ -1,6 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 
-class DeliveryProblems extends Model {
+class DeliveryProblem extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -13,6 +13,13 @@ class DeliveryProblems extends Model {
 
     return this;
   }
+
+  static associate(models) {
+    this.belongsTo(models.Order, {
+      foreignKey: 'delivery_id',
+      as: 'problem',
+    });
+  }
 }
 
-export default DeliveryProblems;
+export default DeliveryProblem;

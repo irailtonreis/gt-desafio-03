@@ -71,7 +71,7 @@ class OrderController {
     await Mail.sendMail({
       to: `${deliveryman.name} ${deliveryman.email}`,
       subject: 'Nova encomenda',
-      template: 'cancellation',
+      template: 'delivery',
       context: {
         deliveryman: deliveryman.name,
         recipient: recipient.nome,
@@ -91,15 +91,19 @@ class OrderController {
   async update(req, res) {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
-      recipient_id: Yup.number().required(),
-      deliveryman_id: Yup.number().required(),
+      // recipient_id: Yup.number().required(),
+      // deliveryman_id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' })
+      return res.status(400).json({ error: 'Validation fails' });
     }
 
     const order = await Order.findByPk(req.params.id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'Order not found' });
+    }
 
     await order.update(req.body);
 
@@ -117,13 +121,33 @@ class OrderController {
 
     const order = await Order.findByPk(req.params.id);
 
-    if (order.start_date) {
+    if (!order.start_date) {
       return res.status(401).json({ error: 'Cancellation is not allowed' });
     }
 
     order.canceled_at = new Date();
     await order.save();
 
+    const deliveryman = await Deliveryman.findByPk(order.deliveryman_id);
+
+    const recipient = await Recipient.findByPk(order.recipient_id);
+
+    await Mail.sendMail({
+      to: `${deliveryman.name} ${deliveryman.email}`,
+      subject: 'Delivery Cancelado',
+      template: 'cancellation',
+      context: {
+        deliveryman: deliveryman.name,
+        recipient: recipient.nome,
+        rua: recipient.rua,
+        numero: recipient.numero,
+        cep: recipient.cep,
+        complemento: recipient.complemento,
+        cidade: recipient.cidade,
+        estado: recipient.estado,
+        product: order.product,
+      },
+    });
     return res.json(order);
   }
 }
