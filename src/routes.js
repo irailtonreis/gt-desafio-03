@@ -7,6 +7,7 @@ import DeliverymanController from './app/controllers/DeliverymanController';
 import OrderController from './app/controllers/OrderController';
 import ViewController from './app/controllers/ViewController';
 import DeliveryProblemController from './app/controllers/DeliveryProblemController';
+import StatusController from './app/controllers/StatusController';
 import authMiddleware from './app/middlewares/auth';
 import multerConfig from './config/multer';
 
@@ -18,9 +19,9 @@ routes.post('/sessions', SessionController.store);
 
 routes.get('/view/:id', ViewController.index);
 routes.get('/view/:id/deliveries', ViewController.show);
-routes.put('/view/:id/deliveries', ViewController.update);
-
 routes.post('/delivery/:id/problems', DeliveryProblemController.store);
+
+routes.put('/status/:id/deliveries', StatusController.update);
 
 routes.use(authMiddleware);
 routes.get('/recipients', RecipientController.index);

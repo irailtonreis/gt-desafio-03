@@ -91,8 +91,8 @@ class OrderController {
   async update(req, res) {
     const schema = Yup.object().shape({
       product: Yup.string().required(),
-      // recipient_id: Yup.number().required(),
-      // deliveryman_id: Yup.number().required(),
+      recipient_id: Yup.number().required(),
+      deliveryman_id: Yup.number().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
