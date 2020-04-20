@@ -12,7 +12,7 @@ class OrderController {
         canceled_at: null,
       },
       order: ['id'],
-      attributes: ['id', 'product', 'start_date'],
+      attributes: ['id', 'product', 'start_date', 'end_date'],
       include: [
         {
           model: Deliveryman,
