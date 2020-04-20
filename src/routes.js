@@ -20,6 +20,7 @@ routes.post('/sessions', SessionController.store);
 routes.get('/view/:id', ViewController.index);
 routes.get('/view/:id/deliveries', ViewController.show);
 routes.post('/delivery/:id/problems', DeliveryProblemController.store);
+routes.post('/delivery/:id/problems', DeliveryProblemController.show);
 
 routes.put('/status/:id/deliveries', StatusController.update);
 

@@ -2,6 +2,12 @@ import * as Yup from 'yup';
 import DeliveryProblem from '../models/DeliveryProblem';
 
 class DeliveryProblemController {
+  async show(req, res) {
+    const { id } = req.params;
+    const problem = DeliveryProblem.findAll({ where: id });
+    return res.json(problem);
+  }
+
   async index(req, res) {
     const { id } = req.params;
 
